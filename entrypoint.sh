@@ -11,10 +11,10 @@ source activate
 chia init
 
 if [[ "${KEYS}" == "generate" ]]; then
-    echo "Pass your own keys as a variable: -e KEYS=\"24 words\""
+    echo "Pass your own keys as a mounted file: -v /path/to/key.file:/path/in/container"
     chia keys generate
 else
-    echo "${KEYS}" | chia keys add
+    chia keys add -f "${KEYS}"
 fi
 
 if [[ ! "$(ls -A "${PLOTS_DIR}")" ]]; then

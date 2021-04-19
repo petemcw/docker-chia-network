@@ -10,10 +10,11 @@
 docker run -d --name="chia" \
     -v <path to data>:/farm/plots \
     -v <path to data>:/farm/tmp \
+    -v <path to keys file>:/farm/keys.txt \
     -p 8444:8444 \
     -p 8555:8555 \
     -e TZ=<timezone> \
-    -e KEYS="24 word mnemonic phrase" \
+    -e KEYS="/farm/keys.txt" \
     ghcr.io/petemcw/chia-network:latest
 ```
 
