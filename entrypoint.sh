@@ -17,11 +17,13 @@ else
     chia keys add -f "${KEYS}"
 fi
 
-if [[ ! "$(ls -A "${PLOTS_DIR}")" ]]; then
-    echo "Plot directory appears to be empty, try mounting a plot directory"
-fi
-
-chia plots add -d "${PLOTS_DIR}"
+for p in ${PLOTS_DIR//:/ }; do
+    mkdir -p "${p}"
+    if [[ ! "$(ls -A "${PLOTS_DIR}")" ]]; then
+        echo "Plot directory '${p}' appears to be empty, try mounting a plot directory"
+    fi
+    chia plots add -d "${p}"
+done
 
 sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
 
