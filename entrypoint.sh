@@ -3,6 +3,11 @@
 PLOTS_DIR=${PLOTS_DIR:-/farm/plots}
 PLOTS_TMP_DIR=${PLOTS_TMP_DIR:-/farm/tmp}
 
+if [[ -n "${TZ}" ]]; then
+    echo "Setting timezone to ${TZ}"
+    ln -nfs "/usr/share/zoneinfo/${TZ}" /etc/localtime && echo "${TZ}" >/etc/timezone
+fi
+
 cd /app || return
 
 # shellcheck disable=SC1091

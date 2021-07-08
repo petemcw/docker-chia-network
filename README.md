@@ -13,10 +13,12 @@ docker run -d --name="chia" \
     -v <path to keys file>:/farm/keys.txt \
     -p 8444:8444 \
     -p 8555:8555 \
-    -e TZ=<timezone> \
+    -e TZ="America/Chicago" \
     -e KEYS="/farm/keys.txt" \
     ghcr.io/petemcw/chia-network:latest
 ```
+
+The time zone defaults to `America/Chicago`. You can configure a timezone using the `TZ` environment variable. Check the [list of supported time zones](https://manpages.ubuntu.com/manpages/focal/man3/DateTime::TimeZone::Catalog.3pm.html).
 
 ## Example Commands
 

@@ -17,8 +17,8 @@ ENV TZ="America/Chicago" \
 # packages & configure
 RUN \
     echo "**** install runtime packages ****" && \
-    apt-get update && \
-    apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
         acl \
         ansible \
         apt \
@@ -38,9 +38,12 @@ RUN \
         python3.8-venv \
         sudo \
         tar \
+        tzdata \
         unzip \
         vim \
         wget && \
+    ln -nfs /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata && \
     echo "**** cloning project ****" && \
     git clone --branch ${TAG} https://github.com/Chia-Network/chia-blockchain.git /app && \
     cd /app && \
@@ -59,6 +62,7 @@ RUN \
         /var/tmp/*
 
 # copy root filesystem
+ENV PATH=/app/venv/bin:$PATH
 WORKDIR /app
 COPY ./entrypoint.sh entrypoint.sh
 
