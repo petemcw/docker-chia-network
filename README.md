@@ -22,9 +22,32 @@ docker run -d --name="chia" \
 
 For complete reference, visit the [official CLI documentation](https://github.com/Chia-Network/chia-blockchain/wiki/CLI-Commands-Reference) pages.
 
+### Start a Farmer-only Node
+
+When starting the container, you can activate a farmer-only node by passing the following environment variable:
+
+`-e farmer="true"`
+
+### Start a Harvester-only Node
+
+When starting the container, you can activate a harvester-only node by passing the following configuration:
+
+```bash
+-v <path to CA directory>:/farm/ca \
+-e harvester="true" \
+-e farmer_address="ip.address.of.farmer" \
+-e farmer_port="8447" \
+-e ca="/farm/ca" \
+-e keys="copy"
+```
+
 ### Check Status
 
 `docker exec -it chia venv/bin/chia show -s -c`
+
+### Wallet
+
+`docker exec -it chia venv/bin/chia wallet show`
 
 ### Create a Plot
 
