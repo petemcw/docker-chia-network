@@ -3,6 +3,11 @@
 PLOTS_DIR=${PLOTS_DIR:-/farm/plots}
 PLOTS_TMP_DIR=${PLOTS_TMP_DIR:-/farm/tmp}
 
+if [[ -n "${TZ}" ]]; then
+    echo "Setting timezone to ${TZ}"
+    ln -nfs "/usr/share/zoneinfo/${TZ}" /etc/localtime && echo "${TZ}" >/etc/timezone
+fi
+
 cd /app || return
 
 # shellcheck disable=SC1091
@@ -13,6 +18,13 @@ chia init
 if [[ "${KEYS}" == "generate" ]]; then
     echo "Pass your own keys as a mounted file: -v /path/to/key.file:/path/in/container"
     chia keys generate
+elif [[ "${KEYS}" == "copy" ]]; then
+    if [[ -z "${CA}" ]]; then
+        echo "A path to a copy of a farmer peer's SSL/CA directory is required."
+        exit
+    else
+        chia init -c "${CA}"
+    fi
 else
     chia keys add -f "${KEYS}"
 fi
