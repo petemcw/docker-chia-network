@@ -1,7 +1,7 @@
 FROM ubuntu:focal
 
 # environment
-ARG TAG=1.2.0
+ARG TAG=1.2.1
 ENV TZ="America/Chicago" \
     DEBIAN_FRONTEND="noninteractive" \
     FARMER_ADDRESS="null" \
