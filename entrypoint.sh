@@ -8,14 +8,21 @@ if [[ -n "${TZ}" ]]; then
     ln -nfs "/usr/share/zoneinfo/${TZ}" /etc/localtime && echo "${TZ}" >/etc/timezone
 fi
 
-cd /app || return
+cd /app || return 1
 
 # shellcheck disable=SC1091
-source activate
+source ./activate
 
-chia init
+chia init --fix-ssl-permissions
 
-if [[ "${KEYS}" == "generate" ]]; then
+if [[ "${TESTNET}" == "true" ]]; then
+    echo "Configuring testnet."
+    chia configure --testnet true
+fi
+
+if [[ "${KEYS}" == "persistent" ]]; then
+    echo "Not touching key directories"
+elif [[ "${KEYS}" == "generate" ]]; then
     echo "Pass your own keys as a mounted file: -v /path/to/key.file:/path/in/container"
     chia keys generate
 elif [[ "${KEYS}" == "copy" ]]; then
@@ -37,28 +44,6 @@ for p in ${PLOTS_DIR//:/ }; do
     chia plots add -d "${p}"
 done
 
-sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
+sed -i 's/localhost/127.0.0.1/g' "${CHIA_ROOT}/config/config.yaml"
 
-if [[ "${TESTNET}" == "true" ]]; then
-    if [[ -z "${FULL_NODE_PORT}" || "${FULL_NODE_PORT}" == "null" ]]; then
-        chia configure --set-fullnode-port 58444
-    else
-        chia configure --set-fullnode-port "${FULL_NODE_PORT}"
-    fi
-fi
-
-if [[ "${FARMER}" == "true" ]]; then
-    chia start farmer-only
-elif [[ "${HARVESTER}" == "true" ]]; then
-    if [[ -z "${FARMER_ADDRESS}" || -z "${FARMER_PORT}" ]]; then
-        echo "A farmer peer address and port are required."
-        exit
-    else
-        chia configure --set-farmer-peer "${FARMER_ADDRESS}:${FARMER_PORT}"
-        chia start harvester
-    fi
-else
-    chia start farmer
-fi
-
-while true; do sleep 30; done
+exec "$@"

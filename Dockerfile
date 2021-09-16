@@ -1,8 +1,9 @@
 FROM ubuntu:focal
 
 # environment
-ARG TAG=1.2.2
+ARG TAG=1.2.6
 ENV TZ="America/Chicago" \
+    CHIA_ROOT="/root/.chia/mainnet" \
     DEBIAN_FRONTEND="noninteractive" \
     FARMER_ADDRESS="null" \
     FARMER_PORT="null" \
@@ -64,9 +65,11 @@ RUN \
 # copy root filesystem
 ENV PATH=/app/venv/bin:$PATH
 WORKDIR /app
-COPY ./entrypoint.sh entrypoint.sh
+COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY ./start.sh /usr/local/bin/start.sh
 
 # external
 EXPOSE 8444 8555
 VOLUME ["/farm/plots", "/farm/tmp"]
-ENTRYPOINT [ "bash", "./entrypoint.sh" ]
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+CMD ["/usr/local/bin/start.sh"]
