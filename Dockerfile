@@ -1,7 +1,8 @@
 FROM ubuntu:focal
 
 # environment
-ARG TAG=1.2.6
+LABEL org.opencontainers.image.source https://github.com/petemcw/chia-network
+ARG TAG=1.3.5
 ENV TZ="America/Chicago" \
     CHIA_ROOT="/root/.chia/mainnet" \
     DEBIAN_FRONTEND="noninteractive" \
