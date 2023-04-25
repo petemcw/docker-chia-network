@@ -1,8 +1,8 @@
-FROM ubuntu:focal
+FROM ubuntu:20.04
 
 # environment
 LABEL org.opencontainers.image.source https://github.com/petemcw/chia-network
-ARG TAG=1.3.5
+ARG TAG=1.7.1
 ENV TZ="America/Chicago" \
     CHIA_ROOT="/root/.chia/mainnet" \
     DEBIAN_FRONTEND="noninteractive" \
@@ -36,8 +36,8 @@ RUN \
         python3 \
         python3-dev \
         python3-pip \
-        python3.8-distutils \
-        python3.8-venv \
+        python3.9-distutils \
+        python3.9-venv \
         sudo \
         tar \
         tzdata \
